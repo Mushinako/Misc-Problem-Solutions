@@ -23,6 +23,7 @@ function f(str: string, key: number) {
             r = 0;
         }
     }
+    console.info(mainArray);
     const newMainArray: string[] = Array(key);
     for (let i = 0; i < mainArray.length; i++) {
         newMainArray[i] = mainArray[i].join("");

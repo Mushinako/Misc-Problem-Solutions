@@ -25,6 +25,7 @@ function f(str, key) {
             r = 0;
         }
     }
+    console.info(mainArray);
     var newMainArray = Array(key);
     for (var i = 0; i < mainArray.length; i++) {
         newMainArray[i] = mainArray[i].join("");
