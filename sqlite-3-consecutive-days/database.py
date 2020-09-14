@@ -47,11 +47,19 @@ class Field:
 
 DB_PATH = "database.sqlite"
 TABLE_NAME = "logins"
+DATE_FIELD = "last_login_date"
+
 PRIMARY_KEY = Field("id", "INTEGER", primary_key=True)
 FIELDS = [
     Field("name", "TEXT", not_null=True),
-    Field("last_login_date", "TEXT", not_null=True),
+    Field(DATE_FIELD, "TEXT", not_null=True),
 ]
+
+########################################################
+# SQL command of question
+# ------------------------------------------------------
+COMMAND = f"""SELECT name FROM {TABLE_NAME} n WHERE EXISTS(SELECT 1 FROM {TABLE_NAME} WHERE name=n.name AND date({DATE_FIELD})=date(n.{DATE_FIELD}, "+1 day")) AND EXISTS(SELECT 1 FROM {TABLE_NAME} WHERE name=n.name AND date({DATE_FIELD})=date(n.{DATE_FIELD}, "+2 day"))"""
+########################################################
 
 
 @contextmanager
@@ -136,8 +144,6 @@ def execute_date_search(conn: sqlite3.Connection) -> None:
         conn (sqlite3.Connection): Database connection
     """
 
-    date_field = "last_login_date"
-    command = f"""SELECT name FROM {TABLE_NAME} n WHERE EXISTS(SELECT 1 FROM {TABLE_NAME} WHERE name=n.name AND date({date_field})=date(n.{date_field}, "+1 day")) AND EXISTS(SELECT 1 FROM {TABLE_NAME} WHERE name=n.name AND date({date_field})=date(n.{date_field}, "+2 day"))"""
     with conn:
         cursor = conn.execute(command)
     print([record[0] for record in cursor.fetchall()])
